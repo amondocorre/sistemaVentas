@@ -1,5 +1,9 @@
 RewriteEngine On
 
+# Asegurar que el header Authorization (Bearer ...) llegue a PHP
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
 # Remove index.php from URL (todas las peticiones, incluyendo OPTIONS, pasan por index.php)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
