@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Remove index.php from URL (todas las peticiones, incluyendo OPTIONS, pasan por index.php)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1 [L]
+
+# Las cabeceras CORS se manejan en el hook CorsHook de CodeIgniter
