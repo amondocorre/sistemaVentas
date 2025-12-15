@@ -247,3 +247,27 @@ ERROR - 2025-12-13 07:42:25 --> Could not find the specified $config['composer_a
 ERROR - 2025-12-13 07:42:25 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
 ERROR - 2025-12-13 07:42:25 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
 ERROR - 2025-12-13 07:42:25 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-13 08:11:40 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-13 08:11:40 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-13 08:11:40 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-13 08:11:40 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-13 08:11:40 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-13 08:11:40 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-13 08:13:22 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-13 08:13:22 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-13 08:13:22 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-13 08:13:22 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-13 08:13:38 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-13 08:13:38 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-13 08:13:53 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-13 08:13:57 --> Severity: Warning --> mysqli::real_connect(): (HY000/2002): No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+ C:\xampp\htdocs\amondocorre\sistemaV\backend\system\database\drivers\mysqli\mysqli_driver.php 211
+ERROR - 2025-12-13 08:13:57 --> Unable to connect to the database
+ERROR - 2025-12-13 08:23:00 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-13 08:23:04 --> Severity: Warning --> mysqli::real_connect(): (HY000/2002): No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+ C:\xampp\htdocs\amondocorre\sistemaV\backend\system\database\drivers\mysqli\mysqli_driver.php 211
+ERROR - 2025-12-13 08:23:04 --> Unable to connect to the database
+ERROR - 2025-12-13 08:23:30 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-13 08:23:34 --> Severity: Warning --> mysqli::real_connect(): (HY000/2002): No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+ C:\xampp\htdocs\amondocorre\sistemaV\backend\system\database\drivers\mysqli\mysqli_driver.php 211
+ERROR - 2025-12-13 08:23:34 --> Unable to connect to the database

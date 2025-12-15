@@ -12,6 +12,7 @@ class Inventario extends MY_Controller
     {
         parent::__construct();
         $this->load->model('Inventario_model');
+        $this->load->model('Producto_model');
     }
 
     /**
@@ -143,6 +144,16 @@ class Inventario extends MY_Controller
                 'message' => 'Producto y cantidad válida son requeridos'
             ), 400);
         }
+
+        $precio_compra = isset($input['precio_compra']) && $input['precio_compra'] !== '' ? (float)$input['precio_compra'] : null;
+        $precio_venta = isset($input['precio_venta']) && $input['precio_venta'] !== '' ? (float)$input['precio_venta'] : null;
+
+        if ($precio_compra !== null && $precio_compra < 0) {
+            $this->response(array('success' => false, 'message' => 'Precio de compra inválido'), 400);
+        }
+        if ($precio_venta !== null && $precio_venta < 0) {
+            $this->response(array('success' => false, 'message' => 'Precio de venta inválido'), 400);
+        }
         
         $id_sucursal = $this->is_admin() && isset($input['id_sucursal']) 
             ? $input['id_sucursal'] 
@@ -153,8 +164,30 @@ class Inventario extends MY_Controller
             $id_sucursal,
             $input['cantidad'],
             $this->user['id'],
-            isset($input['motivo']) ? $input['motivo'] : 'Entrada de mercadería'
+            isset($input['motivo']) ? $input['motivo'] : 'Entrada de mercadería',
+            $precio_compra,
+            $precio_venta
         );
+
+        if ($precio_compra !== null || $precio_venta !== null) {
+            $producto = $this->Producto_model->get_by_id($input['id_producto']);
+            if ($producto) {
+                $data_update = array();
+
+                if ($precio_compra !== null) {
+                    $data_update['precio_compra'] = $precio_compra;
+                }
+
+                if ($precio_venta !== null) {
+                    $precio_actual = isset($producto['precio_venta']) ? (float)$producto['precio_venta'] : 0;
+                    $data_update['precio_venta'] = max($precio_actual, $precio_venta);
+                }
+
+                if (!empty($data_update)) {
+                    $this->Producto_model->update($input['id_producto'], $data_update);
+                }
+            }
+        }
         
         $this->log_audit('entrada_inventario', 'inventario_sucursal', null, null, $input);
         
@@ -196,6 +229,16 @@ class Inventario extends MY_Controller
                 'message' => 'Las sucursales deben ser diferentes'
             ), 400);
         }
+
+        $producto = $this->Producto_model->get_by_id((int)$input['id_producto']);
+        if (!$producto || (int)$producto['estado'] !== 1) {
+            $this->response(array(
+                'success' => false,
+                'message' => 'Producto no encontrado o inactivo'
+            ), 400);
+        }
+
+        $precio_compra = isset($producto['precio_compra']) ? (float)$producto['precio_compra'] : null;
         
         $result = $this->Inventario_model->transferir(
             $input['id_producto'],
@@ -203,7 +246,8 @@ class Inventario extends MY_Controller
             $input['id_sucursal_destino'],
             $input['cantidad'],
             $this->user['id'],
-            isset($input['motivo']) ? $input['motivo'] : 'Transferencia entre sucursales'
+            isset($input['motivo']) ? $input['motivo'] : 'Transferencia entre sucursales',
+            $precio_compra
         );
         
         if (!$result['success']) {
@@ -218,6 +262,94 @@ class Inventario extends MY_Controller
         $this->response(array(
             'success' => true,
             'message' => 'Transferencia realizada exitosamente'
+        ));
+    }
+
+    /**
+     * POST /api/inventario/transferir-masivo
+     * Transfiere múltiples productos entre sucursales
+     */
+    public function transferir_masivo()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->response(array('success' => false, 'message' => 'Método no permitido'), 405);
+        }
+
+        // Solo admin puede transferir
+        if (!$this->is_admin()) {
+            $this->response(array('success' => false, 'message' => 'No autorizado'), 403);
+        }
+
+        $input = $this->get_json_input();
+
+        $id_sucursal_origen = isset($input['id_sucursal_origen']) ? (int)$input['id_sucursal_origen'] : 0;
+        $id_sucursal_destino = isset($input['id_sucursal_destino']) ? (int)$input['id_sucursal_destino'] : 0;
+        $items = isset($input['items']) ? $input['items'] : null;
+        $motivo = isset($input['motivo']) ? $input['motivo'] : 'Transferencia masiva entre sucursales';
+
+        if ($id_sucursal_origen <= 0 || $id_sucursal_destino <= 0 || !is_array($items) || count($items) === 0) {
+            $this->response(array(
+                'success' => false,
+                'message' => 'Origen, destino e items son requeridos'
+            ), 400);
+        }
+
+        if ($id_sucursal_origen === $id_sucursal_destino) {
+            $this->response(array(
+                'success' => false,
+                'message' => 'Las sucursales deben ser diferentes'
+            ), 400);
+        }
+
+        $prepared_items = array();
+        foreach ($items as $item) {
+            $id_producto = isset($item['id_producto']) ? (int)$item['id_producto'] : 0;
+            $cantidad = isset($item['cantidad']) ? (int)$item['cantidad'] : 0;
+
+            if ($id_producto <= 0 || $cantidad <= 0) {
+                $this->response(array(
+                    'success' => false,
+                    'message' => 'Items inválidos'
+                ), 400);
+            }
+
+            $producto = $this->Producto_model->get_by_id($id_producto);
+            if (!$producto || (int)$producto['estado'] !== 1) {
+                $this->response(array(
+                    'success' => false,
+                    'message' => 'Producto no encontrado o inactivo: ' . $id_producto
+                ), 400);
+            }
+
+            $precio_compra = isset($producto['precio_compra']) ? (float)$producto['precio_compra'] : null;
+
+            $prepared_items[] = array(
+                'id_producto' => $id_producto,
+                'cantidad' => $cantidad,
+                'precio_compra' => $precio_compra,
+            );
+        }
+
+        $result = $this->Inventario_model->transferir_masivo(
+            $id_sucursal_origen,
+            $id_sucursal_destino,
+            $prepared_items,
+            $this->user['id'],
+            $motivo
+        );
+
+        if (!$result['success']) {
+            $this->response(array(
+                'success' => false,
+                'message' => $result['message']
+            ), 400);
+        }
+
+        $this->log_audit('transferir_inventario_masivo', 'inventario_sucursal', null, null, $input);
+
+        $this->response(array(
+            'success' => true,
+            'message' => 'Transferencia masiva realizada exitosamente'
         ));
     }
 

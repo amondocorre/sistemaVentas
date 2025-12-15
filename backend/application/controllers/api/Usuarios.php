@@ -81,10 +81,18 @@ class Usuarios extends MY_Controller
         $input = $this->get_json_input();
         
         // Validar campos requeridos
-        if (empty($input['nombre']) || empty($input['email']) || empty($input['password']) || empty($input['id_rol'])) {
+        if (empty($input['nombre']) || empty($input['usuario']) || empty($input['email']) || empty($input['password']) || empty($input['id_rol'])) {
             $this->response(array(
                 'success' => false,
-                'message' => 'Nombre, email, contraseña y rol son requeridos'
+                'message' => 'Nombre, usuario, email, contraseña y rol son requeridos'
+            ), 400);
+        }
+
+        // Verificar usuario único
+        if ($this->Usuario_model->usuario_exists($input['usuario'])) {
+            $this->response(array(
+                'success' => false,
+                'message' => 'El usuario ya está registrado'
             ), 400);
         }
         
@@ -98,6 +106,7 @@ class Usuarios extends MY_Controller
         
         $data = array(
             'nombre' => $input['nombre'],
+            'usuario' => $input['usuario'],
             'email' => $input['email'],
             'password' => $input['password'],
             'id_rol' => $input['id_rol'],
@@ -136,6 +145,16 @@ class Usuarios extends MY_Controller
         }
         
         $input = $this->get_json_input();
+
+        // Verificar usuario único
+        if (isset($input['usuario']) && $input['usuario'] !== $usuario['usuario']) {
+            if ($this->Usuario_model->usuario_exists($input['usuario'], $id)) {
+                $this->response(array(
+                    'success' => false,
+                    'message' => 'El usuario ya está registrado'
+                ), 400);
+            }
+        }
         
         // Verificar email único
         if (!empty($input['email']) && $input['email'] !== $usuario['email']) {
@@ -148,7 +167,7 @@ class Usuarios extends MY_Controller
         }
         
         $data = array();
-        $campos = array('nombre', 'email', 'password', 'id_rol', 'id_sucursal', 'telefono', 'estado');
+        $campos = array('nombre', 'usuario', 'email', 'password', 'id_rol', 'id_sucursal', 'telefono', 'estado');
         
         foreach ($campos as $campo) {
             if (isset($input[$campo])) {

@@ -35,6 +35,7 @@ class Usuario_model extends CI_Model
         if (isset($filters['search'])) {
             $this->db->group_start();
             $this->db->like('u.nombre', $filters['search']);
+            $this->db->or_like('u.usuario', $filters['search']);
             $this->db->or_like('u.email', $filters['search']);
             $this->db->group_end();
         }
@@ -61,6 +62,23 @@ class Usuario_model extends CI_Model
             $user['permisos'] = json_decode($user['permisos'], true);
         }
         
+        return $user;
+    }
+
+    public function get_by_usuario($usuario)
+    {
+        $this->db->select('u.*, r.nombre as rol, r.permisos, s.nombre as sucursal');
+        $this->db->from($this->table . ' u');
+        $this->db->join('roles r', 'r.id = u.id_rol', 'left');
+        $this->db->join('sucursales s', 's.id = u.id_sucursal', 'left');
+        $this->db->where('u.usuario', $usuario);
+
+        $user = $this->db->get()->row_array();
+
+        if ($user && $user['permisos']) {
+            $user['permisos'] = json_decode($user['permisos'], true);
+        }
+
         return $user;
     }
 
@@ -125,9 +143,9 @@ class Usuario_model extends CI_Model
     /**
      * Verifica credenciales
      */
-    public function verify_credentials($email, $password)
+    public function verify_credentials($identifier, $password)
     {
-        $user = $this->get_by_email($email);
+        $user = $this->get_by_usuario($identifier);
         
         if (!$user) {
             return false;
@@ -200,6 +218,17 @@ class Usuario_model extends CI_Model
             $this->db->where('id !=', $exclude_id);
         }
         
+        return $this->db->count_all_results($this->table) > 0;
+    }
+
+    public function usuario_exists($usuario, $exclude_id = null)
+    {
+        $this->db->where('usuario', $usuario);
+
+        if ($exclude_id) {
+            $this->db->where('id !=', $exclude_id);
+        }
+
         return $this->db->count_all_results($this->table) > 0;
     }
 }

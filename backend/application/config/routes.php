@@ -138,6 +138,7 @@ $route['api/inventario/sucursal/(:num)']['GET'] = 'api/Inventario/por_sucursal/$
 $route['api/inventario/producto/(:num)']['GET'] = 'api/Inventario/por_producto/$1';
 $route['api/inventario/ajustar']['POST'] = 'api/Inventario/ajustar';
 $route['api/inventario/transferir']['POST'] = 'api/Inventario/transferir';
+$route['api/inventario/transferir-masivo']['POST'] = 'api/Inventario/transferir_masivo';
 $route['api/inventario/movimientos']['GET'] = 'api/Inventario/movimientos';
 $route['api/inventario/entrada']['POST'] = 'api/Inventario/entrada';
 
@@ -152,6 +153,17 @@ $route['api/metodos-pago/(:num)']['GET'] = 'api/MetodosPago/show/$1';
 $route['api/metodos-pago/(:num)']['PUT'] = 'api/MetodosPago/update/$1';
 $route['api/metodos-pago/(:num)']['DELETE'] = 'api/MetodosPago/delete/$1';
 $route['api/metodos-pago/(:num)/qr']['POST'] = 'api/MetodosPago/upload_qr/$1';
+
+/*
+|--------------------------------------------------------------------------
+| API Routes - Caja / Turnos
+|--------------------------------------------------------------------------
+*/
+$route['api/caja/turno-abierto']['GET'] = 'api/Caja/turno_abierto';
+$route['api/caja/apertura']['POST'] = 'api/Caja/apertura';
+$route['api/caja/cierre']['POST'] = 'api/Caja/cierre';
+$route['api/caja/turnos-cerrados']['GET'] = 'api/Caja/turnos_cerrados';
+$route['api/caja/turnos/(:num)']['GET'] = 'api/Caja/turno/$1';
 
 /*
 |--------------------------------------------------------------------------

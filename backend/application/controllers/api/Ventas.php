@@ -14,6 +14,7 @@ class Ventas extends MY_Controller
         $this->load->model('Venta_model');
         $this->load->model('Producto_model');
         $this->load->model('Cliente_model');
+        $this->load->model('Caja_model');
     }
 
     /**
@@ -92,6 +93,14 @@ class Ventas extends MY_Controller
         }
         
         $this->require_permission('ventas_registrar');
+
+        $turno = $this->Caja_model->get_turno_abierto($this->user['id'], $this->user['id_sucursal']);
+        if (!$turno) {
+            $this->response(array(
+                'success' => false,
+                'message' => 'Debe realizar apertura de caja antes de registrar ventas'
+            ), 400);
+        }
         
         $input = $this->get_json_input();
 
@@ -174,7 +183,27 @@ class Ventas extends MY_Controller
                 ), 400);
             }
             
-            $precio_unitario = isset($item['precio_unitario']) ? $item['precio_unitario'] : $producto['precio_venta'];
+            $precio_sugerido = (float)$producto['precio_venta'];
+            $precio_unitario = isset($item['precio_unitario']) && $item['precio_unitario'] !== ''
+                ? (float)$item['precio_unitario']
+                : $precio_sugerido;
+
+            if ($precio_unitario < 0) {
+                $this->response(array(
+                    'success' => false,
+                    'message' => 'Precio unitario inválido para: ' . $producto['nombre']
+                ), 400);
+            }
+
+            $precio_compra = isset($producto['precio_compra']) ? (float)$producto['precio_compra'] : 0;
+
+            if ($precio_compra > 0 && $precio_unitario < $precio_compra) {
+                $this->response(array(
+                    'success' => false,
+                    'message' => 'El precio de venta no puede ser menor al precio de costo para: ' . $producto['nombre']
+                ), 400);
+            }
+
             $descuento = isset($item['descuento']) ? $item['descuento'] : 0;
             $item_subtotal = ($precio_unitario * $item['cantidad']) - $descuento;
             
@@ -182,7 +211,7 @@ class Ventas extends MY_Controller
                 'id_producto' => $item['id_producto'],
                 'cantidad' => $item['cantidad'],
                 'precio_unitario' => $precio_unitario,
-                'precio_compra' => $producto['precio_compra'],
+                'precio_compra' => $precio_compra,
                 'descuento' => $descuento,
                 'subtotal' => $item_subtotal
             );

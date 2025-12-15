@@ -46,6 +46,7 @@ class JWT_Library
             'type' => 'access',
             'data' => array(
                 'id' => $user_data['id'],
+                'usuario' => isset($user_data['usuario']) ? $user_data['usuario'] : null,
                 'email' => $user_data['email'],
                 'nombre' => $user_data['nombre'],
                 'id_rol' => $user_data['id_rol'],

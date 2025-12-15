@@ -28,15 +28,17 @@ class Auth extends Public_Controller
         $input = $this->get_json_input();
         
         // Validar campos requeridos
-        if (empty($input['email']) || empty($input['password'])) {
+        $usuario = isset($input['usuario']) ? trim((string)$input['usuario']) : '';
+
+        if (empty($usuario) || empty($input['password'])) {
             $this->response(array(
                 'success' => false,
-                'message' => 'Email y contraseña son requeridos'
+                'message' => 'Usuario y contraseña son requeridos'
             ), 400);
         }
 
         // Verificar credenciales
-        $user = $this->Usuario_model->verify_credentials($input['email'], $input['password']);
+        $user = $this->Usuario_model->verify_credentials($usuario, $input['password']);
         
         if (!$user) {
             $this->response(array(

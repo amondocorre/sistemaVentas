@@ -93,7 +93,7 @@ class Inventario_model extends CI_Model
     /**
      * Ajusta el stock de un producto
      */
-    public function ajustar($id_producto, $id_sucursal, $cantidad, $id_usuario, $motivo = null)
+    public function ajustar($id_producto, $id_sucursal, $cantidad, $id_usuario, $motivo = null, $precio_compra = null, $precio_venta = null)
     {
         $inventario = $this->get_or_create($id_producto, $id_sucursal);
         $stock_anterior = $inventario['stock'];
@@ -110,7 +110,7 @@ class Inventario_model extends CI_Model
         
         // Registrar movimiento
         $tipo = $cantidad > 0 ? 'entrada' : 'salida';
-        $this->registrar_movimiento($id_producto, $id_sucursal, $id_usuario, $tipo, abs($cantidad), $stock_anterior, $stock_nuevo, $motivo);
+        $this->registrar_movimiento($id_producto, $id_sucursal, $id_usuario, $tipo, abs($cantidad), $stock_anterior, $stock_nuevo, $motivo, null, null, $precio_compra, $precio_venta);
         
         return array('success' => true, 'stock_nuevo' => $stock_nuevo);
     }
@@ -118,25 +118,27 @@ class Inventario_model extends CI_Model
     /**
      * Entrada de stock
      */
-    public function entrada($id_producto, $id_sucursal, $cantidad, $id_usuario, $motivo = null)
+    public function entrada($id_producto, $id_sucursal, $cantidad, $id_usuario, $motivo = null, $precio_compra = null, $precio_venta = null)
     {
-        return $this->ajustar($id_producto, $id_sucursal, abs($cantidad), $id_usuario, $motivo);
+        return $this->ajustar($id_producto, $id_sucursal, abs($cantidad), $id_usuario, $motivo, $precio_compra, $precio_venta);
     }
 
     /**
      * Salida de stock
      */
-    public function salida($id_producto, $id_sucursal, $cantidad, $id_usuario, $motivo = null)
+    public function salida($id_producto, $id_sucursal, $cantidad, $id_usuario, $motivo = null, $precio_compra = null, $precio_venta = null)
     {
-        return $this->ajustar($id_producto, $id_sucursal, -abs($cantidad), $id_usuario, $motivo);
+        return $this->ajustar($id_producto, $id_sucursal, -abs($cantidad), $id_usuario, $motivo, $precio_compra, $precio_venta);
     }
 
     /**
      * Transferencia entre sucursales
      */
-    public function transferir($id_producto, $id_sucursal_origen, $id_sucursal_destino, $cantidad, $id_usuario, $motivo = null)
+    public function transferir($id_producto, $id_sucursal_origen, $id_sucursal_destino, $cantidad, $id_usuario, $motivo = null, $precio_compra = null, $use_transaction = true)
     {
-        $this->db->trans_start();
+        if ($use_transaction) {
+            $this->db->trans_start();
+        }
         
         // Verificar stock en origen
         $inventario_origen = $this->get_or_create($id_producto, $id_sucursal_origen);
@@ -165,22 +167,56 @@ class Inventario_model extends CI_Model
         $this->db->update($this->table, array('stock' => $stock_nuevo_destino));
         
         // Registrar movimientos
-        $this->registrar_movimiento($id_producto, $id_sucursal_origen, $id_usuario, 'transferencia', $cantidad, $stock_anterior_origen, $stock_nuevo_origen, $motivo, null, $id_sucursal_destino);
-        $this->registrar_movimiento($id_producto, $id_sucursal_destino, $id_usuario, 'transferencia', $cantidad, $stock_anterior_destino, $stock_nuevo_destino, $motivo);
+        $this->registrar_movimiento($id_producto, $id_sucursal_origen, $id_usuario, 'transferencia', $cantidad, $stock_anterior_origen, $stock_nuevo_origen, $motivo, null, $id_sucursal_destino, $precio_compra, null);
+        $this->registrar_movimiento($id_producto, $id_sucursal_destino, $id_usuario, 'transferencia', $cantidad, $stock_anterior_destino, $stock_nuevo_destino, $motivo, null, null, $precio_compra, null);
         
-        $this->db->trans_complete();
-        
-        if ($this->db->trans_status() === FALSE) {
-            return array('success' => false, 'message' => 'Error al realizar la transferencia');
+        if ($use_transaction) {
+            $this->db->trans_complete();
+            
+            if ($this->db->trans_status() === FALSE) {
+                return array('success' => false, 'message' => 'Error al realizar la transferencia');
+            }
         }
         
         return array('success' => true);
     }
 
     /**
+     * Transferencia masiva entre sucursales
+     */
+    public function transferir_masivo($id_sucursal_origen, $id_sucursal_destino, $items, $id_usuario, $motivo = null)
+    {
+        $this->db->trans_start();
+
+        foreach ($items as $item) {
+            $id_producto = isset($item['id_producto']) ? (int)$item['id_producto'] : 0;
+            $cantidad = isset($item['cantidad']) ? (int)$item['cantidad'] : 0;
+            $precio_compra = array_key_exists('precio_compra', $item) ? $item['precio_compra'] : null;
+
+            if ($id_producto <= 0 || $cantidad <= 0) {
+                $this->db->trans_complete();
+                return array('success' => false, 'message' => 'Datos inválidos en items de transferencia');
+            }
+
+            $res = $this->transferir($id_producto, $id_sucursal_origen, $id_sucursal_destino, $cantidad, $id_usuario, $motivo, $precio_compra, false);
+            if (!$res['success']) {
+                $this->db->trans_complete();
+                return $res;
+            }
+        }
+
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE) {
+            return array('success' => false, 'message' => 'Error al realizar la transferencia masiva');
+        }
+
+        return array('success' => true);
+    }
+
+    /**
      * Registra un movimiento de inventario
      */
-    public function registrar_movimiento($id_producto, $id_sucursal, $id_usuario, $tipo, $cantidad, $stock_anterior, $stock_nuevo, $motivo = null, $id_venta = null, $id_sucursal_destino = null)
+    public function registrar_movimiento($id_producto, $id_sucursal, $id_usuario, $tipo, $cantidad, $stock_anterior, $stock_nuevo, $motivo = null, $id_venta = null, $id_sucursal_destino = null, $precio_compra = null, $precio_venta = null)
     {
         $this->db->insert('movimientos_inventario', array(
             'id_producto' => $id_producto,
@@ -190,6 +226,8 @@ class Inventario_model extends CI_Model
             'cantidad' => $cantidad,
             'stock_anterior' => $stock_anterior,
             'stock_nuevo' => $stock_nuevo,
+            'precio_compra' => $precio_compra,
+            'precio_venta' => $precio_venta,
             'id_venta' => $id_venta,
             'id_sucursal_destino' => $id_sucursal_destino,
             'motivo' => $motivo,
