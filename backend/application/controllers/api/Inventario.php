@@ -13,6 +13,7 @@ class Inventario extends MY_Controller
         parent::__construct();
         $this->load->model('Inventario_model');
         $this->load->model('Producto_model');
+        $this->load->model('Sucursal_model');
     }
 
     /**
@@ -25,7 +26,19 @@ class Inventario extends MY_Controller
 
         // Si es admin y no envía sucursal, por defecto usar su sucursal (o 1)
         if ($this->is_admin() && ($idSucursal === null || $idSucursal === '')) {
-            $idSucursal = !empty($this->user['id_sucursal']) ? $this->user['id_sucursal'] : 1;
+            if (!empty($this->user['id_sucursal'])) {
+                $idSucursal = $this->user['id_sucursal'];
+            } else {
+                $first = $this->Sucursal_model->get_all(array('estado' => 1));
+                $idSucursal = !empty($first) ? $first[0]['id'] : null;
+            }
+        }
+
+        if ($idSucursal === null || $idSucursal === '') {
+            $this->response(array(
+                'success' => true,
+                'data' => array()
+            ));
         }
 
         $filters = array(
