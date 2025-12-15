@@ -15,15 +15,25 @@ class Inventario_model extends CI_Model
      */
     public function get_all($filters = array())
     {
-        $this->db->select('i.*, p.nombre as producto, p.codigo_barras, p.precio_venta, p.stock_minimo, s.nombre as sucursal, c.nombre as categoria');
-        $this->db->from($this->table . ' i');
-        $this->db->join('productos p', 'p.id = i.id_producto');
-        $this->db->join('sucursales s', 's.id = i.id_sucursal');
-        $this->db->join('categorias c', 'c.id = p.id_categoria', 'left');
-        $this->db->where('p.estado', 1);
-        
+        // Si se consulta por sucursal, incluir también productos sin registro previo en inventario_sucursal
+        // (stock 0) para poder hacer entradas a productos recién creados.
         if (isset($filters['id_sucursal'])) {
-            $this->db->where('i.id_sucursal', $filters['id_sucursal']);
+            $id_sucursal = $filters['id_sucursal'];
+
+            $this->db->select("i.id, p.id as id_producto, s.id as id_sucursal, COALESCE(i.stock, 0) as stock, COALESCE(i.stock_reservado, 0) as stock_reservado, i.ubicacion, p.nombre as producto, p.codigo_barras, p.precio_venta, p.stock_minimo, s.nombre as sucursal, c.nombre as categoria");
+            $this->db->from('productos p');
+            $this->db->join('sucursales s', 's.id = ' . (int)$id_sucursal, 'inner', false);
+            $this->db->join($this->table . ' i', 'i.id_producto = p.id AND i.id_sucursal = ' . (int)$id_sucursal, 'left', false);
+            $this->db->join('categorias c', 'c.id = p.id_categoria', 'left');
+            $this->db->where('p.estado', 1);
+        } else {
+            // Sin sucursal específica, mantener el comportamiento actual (solo registros existentes)
+            $this->db->select('i.*, p.nombre as producto, p.codigo_barras, p.precio_venta, p.stock_minimo, s.nombre as sucursal, c.nombre as categoria');
+            $this->db->from($this->table . ' i');
+            $this->db->join('productos p', 'p.id = i.id_producto');
+            $this->db->join('sucursales s', 's.id = i.id_sucursal');
+            $this->db->join('categorias c', 'c.id = p.id_categoria', 'left');
+            $this->db->where('p.estado', 1);
         }
         
         if (isset($filters['stock_critico']) && $filters['stock_critico']) {
