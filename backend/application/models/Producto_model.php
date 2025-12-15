@@ -134,6 +134,11 @@ class Producto_model extends CI_Model
      */
     public function create($data)
     {
+        if (array_key_exists('codigo_barras', $data)) {
+            $codigo = trim((string)$data['codigo_barras']);
+            $data['codigo_barras'] = ($codigo === '') ? null : $codigo;
+        }
+
         $data['created_at'] = date('Y-m-d H:i:s');
         
         $this->db->insert($this->table, $data);
@@ -145,6 +150,11 @@ class Producto_model extends CI_Model
      */
     public function update($id, $data)
     {
+        if (array_key_exists('codigo_barras', $data)) {
+            $codigo = trim((string)$data['codigo_barras']);
+            $data['codigo_barras'] = ($codigo === '') ? null : $codigo;
+        }
+
         $data['updated_at'] = date('Y-m-d H:i:s');
         
         $this->db->where('id', $id);
