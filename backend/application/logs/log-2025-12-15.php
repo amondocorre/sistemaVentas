@@ -834,3 +834,57 @@ ERROR - 2025-12-15 15:26:39 --> Could not find the specified $config['composer_a
 ERROR - 2025-12-15 15:26:39 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
 ERROR - 2025-12-15 15:27:06 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
 ERROR - 2025-12-15 15:27:16 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:37:43 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:37:43 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:37:43 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:37:43 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:37:43 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:37:43 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:37:48 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:37:48 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:37:51 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:37:58 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:37:59 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:38:20 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:38:20 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:38:23 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:38:23 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:38:24 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:38:24 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:38:26 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:52:48 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:52:48 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:52:48 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 15:52:52 --> Severity: Warning --> mysqli::real_connect(): (HY000/2002): No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+ C:\xampp\htdocs\amondocorre\sistemaV\backend\system\database\drivers\mysqli\mysqli_driver.php 211
+ERROR - 2025-12-15 15:52:52 --> Unable to connect to the database
+ERROR - 2025-12-15 15:52:52 --> Severity: Warning --> mysqli::real_connect(): (HY000/2002): No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+ C:\xampp\htdocs\amondocorre\sistemaV\backend\system\database\drivers\mysqli\mysqli_driver.php 211
+ERROR - 2025-12-15 15:52:52 --> Severity: Warning --> mysqli::real_connect(): (HY000/2002): No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+ C:\xampp\htdocs\amondocorre\sistemaV\backend\system\database\drivers\mysqli\mysqli_driver.php 211
+ERROR - 2025-12-15 15:52:52 --> Unable to connect to the database
+ERROR - 2025-12-15 15:52:52 --> Unable to connect to the database
+ERROR - 2025-12-15 16:14:10 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:10 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:10 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:14 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:14 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:16 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:16 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:21 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:21 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:21 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:21 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:21 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:21 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:22 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:22 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:22 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:22 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:52 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:52 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:52 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:14:52 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:16:57 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:16:57 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
+ERROR - 2025-12-15 16:16:57 --> Could not find the specified $config['composer_autoload'] path: C:\xampp\htdocs\amondocorre\sistemaV\backend\application\vendor/autoload.php
