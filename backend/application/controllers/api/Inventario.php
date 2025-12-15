@@ -21,8 +21,15 @@ class Inventario extends MY_Controller
      */
     public function index()
     {
+        $idSucursal = $this->is_admin() ? $this->input->get('id_sucursal') : $this->user['id_sucursal'];
+
+        // Si es admin y no envía sucursal, por defecto usar su sucursal (o 1)
+        if ($this->is_admin() && ($idSucursal === null || $idSucursal === '')) {
+            $idSucursal = !empty($this->user['id_sucursal']) ? $this->user['id_sucursal'] : 1;
+        }
+
         $filters = array(
-            'id_sucursal' => $this->is_admin() ? $this->input->get('id_sucursal') : $this->user['id_sucursal'],
+            'id_sucursal' => $idSucursal,
             'stock_critico' => $this->input->get('stock_critico'),
             'search' => $this->input->get('search')
         );
