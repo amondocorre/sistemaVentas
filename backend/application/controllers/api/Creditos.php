@@ -11,6 +11,7 @@ class Creditos extends MY_Controller
         $this->load->model('Venta_model');
         $this->load->model('VentaCobro_model');
         $this->load->model('MetodoPago_model');
+        $this->load->model('Caja_model');
     }
 
     public function cobros($id_venta)
@@ -89,11 +90,26 @@ class Creditos extends MY_Controller
 
         $this->require_permission('creditos_cobrar');
 
+        $turno = $this->Caja_model->get_turno_abierto($this->user['id'], $this->user['id_sucursal']);
+        if (!$turno) {
+            $this->response(array(
+                'success' => false,
+                'message' => 'Debe realizar apertura de caja antes de registrar cobros'
+            ), 400);
+        }
+
         $input = $this->get_json_input();
 
         $monto = isset($input['monto']) ? (float)$input['monto'] : 0;
         $id_metodo_pago = isset($input['id_metodo_pago']) ? (int)$input['id_metodo_pago'] : 0;
         $referencia = isset($input['referencia']) ? trim((string)$input['referencia']) : '';
+        $monto_efectivo = null;
+        if (array_key_exists('monto_efectivo', $input)) {
+            $raw_monto_efectivo = is_string($input['monto_efectivo']) ? trim($input['monto_efectivo']) : $input['monto_efectivo'];
+            if ($raw_monto_efectivo !== '' && $raw_monto_efectivo !== null) {
+                $monto_efectivo = (float)$raw_monto_efectivo;
+            }
+        }
 
         if ($monto <= 0) {
             $this->response(array(
@@ -166,6 +182,37 @@ class Creditos extends MY_Controller
             ), 400);
         }
 
+        $isMixtoEfectivoQr = false;
+        if (!empty($metodo['configuracion'])) {
+            $cfg = json_decode($metodo['configuracion'], true);
+            if (is_array($cfg) && !empty($cfg['mixto'])) {
+                $isMixtoEfectivoQr = true;
+            }
+        }
+
+        if (!$isMixtoEfectivoQr && !empty($metodo['nombre'])) {
+            if (trim((string)$metodo['nombre']) === 'Mixto (Efectivo + QR)') {
+                $isMixtoEfectivoQr = true;
+            }
+        }
+
+        if ($isMixtoEfectivoQr) {
+            if ($monto_efectivo === null) {
+                $this->response(array(
+                    'success' => false,
+                    'message' => 'Monto en efectivo es requerido para pago mixto'
+                ), 400);
+            }
+            if ($monto_efectivo < 0 || $monto_efectivo > $monto) {
+                $this->response(array(
+                    'success' => false,
+                    'message' => 'Monto en efectivo inválido para pago mixto'
+                ), 400);
+            }
+        } else {
+            $monto_efectivo = null;
+        }
+
         $this->db->trans_start();
 
         $cobro_data = array(
@@ -173,6 +220,7 @@ class Creditos extends MY_Controller
             'id_usuario' => (int)$this->user['id'],
             'id_metodo_pago' => (int)$id_metodo_pago,
             'monto' => $monto,
+            'monto_efectivo' => $monto_efectivo,
             'referencia' => $referencia,
         );
 

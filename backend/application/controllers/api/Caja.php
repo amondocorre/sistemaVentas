@@ -152,12 +152,24 @@ class Caja extends MY_Controller
         $fecha_inicio = $turno['fecha_apertura'];
         $fecha_fin = date('Y-m-d H:i:s');
 
-        $resumen = $this->Caja_model->get_resumen_metodos_pago(
+        $resumen = $this->Caja_model->get_resumen_metodos_pago_turno(
             $fecha_inicio,
             $fecha_fin,
             $this->user['id_sucursal'],
             $this->user['id']
         );
+
+        $sumEfectivo = $this->Caja_model->get_resumen_efectivo_turno(
+            $fecha_inicio,
+            $fecha_fin,
+            $this->user['id_sucursal'],
+            $this->user['id']
+        );
+
+        $monto_inicial = isset($turno['monto_inicial']) ? (float)$turno['monto_inicial'] : 0;
+        $total_efectivo_ventas = isset($sumEfectivo['total_efectivo_ventas']) ? (float)$sumEfectivo['total_efectivo_ventas'] : 0;
+        $total_efectivo_mixto = isset($sumEfectivo['total_efectivo_mixto']) ? (float)$sumEfectivo['total_efectivo_mixto'] : 0;
+        $efectivo_esperado = $monto_inicial + $total_efectivo_ventas + $total_efectivo_mixto;
 
         $this->Caja_model->cerrar_turno($turno['id'], $monto_cierre_real);
         $turno_cerrado = $this->Caja_model->get_by_id($turno['id']);
@@ -171,7 +183,10 @@ class Caja extends MY_Controller
                 'turno' => $turno_cerrado,
                 'fecha_inicio' => $fecha_inicio,
                 'fecha_fin' => $fecha_fin,
-                'resumen_metodos_pago' => $resumen
+                'resumen_metodos_pago' => $resumen,
+                'total_efectivo_ventas' => (float)$total_efectivo_ventas,
+                'total_efectivo_mixto' => (float)$total_efectivo_mixto,
+                'efectivo_esperado' => (float)$efectivo_esperado
             )
         ));
     }

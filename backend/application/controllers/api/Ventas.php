@@ -119,6 +119,18 @@ class Ventas extends MY_Controller
             ), 400);
         }
 
+        $metodoPago = null;
+        $isMixtoEfectivoQr = false;
+        if ($tipo_venta === 'contado' && !empty($input['id_metodo_pago'])) {
+            $metodoPago = $this->db->get_where('metodos_pago', array('id' => (int)$input['id_metodo_pago']))->row_array();
+            if ($metodoPago && !empty($metodoPago['configuracion'])) {
+                $cfg = json_decode($metodoPago['configuracion'], true);
+                if (is_array($cfg) && !empty($cfg['mixto'])) {
+                    $isMixtoEfectivoQr = true;
+                }
+            }
+        }
+
         if ($tipo_venta === 'credito' && empty($input['id_cliente'])) {
             $this->response(array(
                 'success' => false,
@@ -223,6 +235,24 @@ class Ventas extends MY_Controller
         $descuento_general = isset($input['descuento']) ? $input['descuento'] : 0;
         $impuesto = isset($input['impuesto']) ? $input['impuesto'] : 0;
         $total = $subtotal - $descuento_general + $impuesto;
+
+        $monto_efectivo = null;
+        if ($tipo_venta === 'contado' && $isMixtoEfectivoQr) {
+            if (!isset($input['monto_efectivo'])) {
+                $this->response(array(
+                    'success' => false,
+                    'message' => 'Monto en efectivo es requerido para pago mixto'
+                ), 400);
+            }
+
+            $monto_efectivo = (float)$input['monto_efectivo'];
+            if ($monto_efectivo < 0 || $monto_efectivo > $total) {
+                $this->response(array(
+                    'success' => false,
+                    'message' => 'Monto en efectivo inválido para pago mixto'
+                ), 400);
+            }
+        }
         
         // Preparar datos de venta
         $data = array(
@@ -235,6 +265,7 @@ class Ventas extends MY_Controller
             'descuento' => $descuento_general,
             'impuesto' => $impuesto,
             'total' => $total,
+            'monto_efectivo' => $monto_efectivo,
             'referencia_pago' => $tipo_venta === 'contado' && isset($input['referencia_pago']) ? $input['referencia_pago'] : null,
             'cliente_nombre' => isset($input['cliente_nombre']) ? $input['cliente_nombre'] : null,
             'cliente_nit' => isset($input['cliente_nit']) ? $input['cliente_nit'] : null,
