@@ -228,7 +228,7 @@ class Inventario_model extends CI_Model
      */
     public function registrar_movimiento($id_producto, $id_sucursal, $id_usuario, $tipo, $cantidad, $stock_anterior, $stock_nuevo, $motivo = null, $id_venta = null, $id_sucursal_destino = null, $precio_compra = null, $precio_venta = null)
     {
-        $this->db->insert('movimientos_inventario', array(
+        $data = array(
             'id_producto' => $id_producto,
             'id_sucursal' => $id_sucursal,
             'id_usuario' => $id_usuario,
@@ -242,7 +242,16 @@ class Inventario_model extends CI_Model
             'id_sucursal_destino' => $id_sucursal_destino,
             'motivo' => $motivo,
             'created_at' => date('Y-m-d H:i:s')
-        ));
+        );
+
+        if (!$this->db->field_exists('precio_compra', 'movimientos_inventario')) {
+            unset($data['precio_compra']);
+        }
+        if (!$this->db->field_exists('precio_venta', 'movimientos_inventario')) {
+            unset($data['precio_venta']);
+        }
+
+        $this->db->insert('movimientos_inventario', $data);
         
         return $this->db->insert_id();
     }
