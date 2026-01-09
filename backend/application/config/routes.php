@@ -211,3 +211,19 @@ $route['api/reportes/metodos-pago/excel']['GET'] = 'api/Reportes/metodos_pago_ex
 */
 $route['api/configuracion']['GET'] = 'api/Configuracion/index';
 $route['api/configuracion']['POST'] = 'api/Configuracion/update';
+
+// API Routes - Proveedores
+$route['api/proveedores']['GET'] = 'api/Proveedores/index';
+$route['api/proveedores']['POST'] = 'api/Proveedores/create';
+$route['api/proveedores/(:num)']['GET'] = 'api/Proveedores/show/$1';
+$route['api/proveedores/(:num)']['PUT'] = 'api/Proveedores/update/$1';
+$route['api/proveedores/(:num)']['DELETE'] = 'api/Proveedores/delete/$1';
+$route['api/proveedores/activos']['GET'] = 'api/Proveedores/activos';
+
+// API Routes - Compras
+$route['api/compras']['GET'] = 'api/Compras/index';
+$route['api/compras']['POST'] = 'api/Compras/create';
+$route['api/compras/(:num)']['GET'] = 'api/Compras/show/$1';
+$route['api/compras/(:num)/pago']['POST'] = 'api/Compras/registrar_pago/$1';
+$route['api/compras/pendientes']['GET'] = 'api/Compras/pendientes';
+$route['api/compras/deuda-proveedor/(:num)']['GET'] = 'api/Compras/deuda_proveedor/$1';

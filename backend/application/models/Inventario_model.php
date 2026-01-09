@@ -126,6 +126,39 @@ class Inventario_model extends CI_Model
     }
 
     /**
+     * Obtiene el stock actual de un producto en una sucursal.
+     * Si no existe registro en inventario, crea uno con stock 0.
+     */
+    public function get_stock($id_producto, $id_sucursal)
+    {
+        $inventario = $this->get_or_create($id_producto, $id_sucursal);
+        return isset($inventario['stock']) ? (float)$inventario['stock'] : 0.0;
+    }
+
+    /**
+     * Actualiza el stock absoluto de un producto en una sucursal.
+     * Crea el registro si no existe.
+     */
+    public function actualizar_stock($id_producto, $id_sucursal, $nuevo_stock)
+    {
+        $inventario = $this->get_or_create($id_producto, $id_sucursal);
+        $stock_actual = isset($inventario['stock']) ? (float)$inventario['stock'] : 0.0;
+        $nuevo_stock = max(0, (float)$nuevo_stock);
+
+        $this->db->where('id_producto', $id_producto);
+        $this->db->where('id_sucursal', $id_sucursal);
+        $this->db->update($this->table, array(
+            'stock' => $nuevo_stock,
+            'updated_at' => date('Y-m-d H:i:s')
+        ));
+
+        return array(
+            'stock_anterior' => $stock_actual,
+            'stock_nuevo' => $nuevo_stock
+        );
+    }
+
+    /**
      * Entrada de stock
      */
     public function entrada($id_producto, $id_sucursal, $cantidad, $id_usuario, $motivo = null, $precio_compra = null, $precio_venta = null)
